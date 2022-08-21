@@ -21,7 +21,7 @@ export class PipelineStack extends cdk.Stack {
       actions: [
         new GitHubSourceAction({
           actionName: 'Pipeline_Source',
-          owner: 'laazyJ',
+          owner: 'laazyj',
           repo: 'learning-aws-pipeline',
           branch: 'master',
           oauthToken: SecretValue.secretsManager('github-token'),
