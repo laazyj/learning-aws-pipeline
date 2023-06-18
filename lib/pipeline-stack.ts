@@ -14,7 +14,8 @@ export class PipelineStack extends cdk.Stack {
       crossAccountKeys: false,
     });
 
-    const sourceOutput = new Artifact('SourceOutput');
+    const cdkSource = new Artifact('CdkSourceOutput');
+    const serviceSource = new Artifact('ServiceSourceOuput');
 
     pipeline.addStage({
       stageName: 'Source',
@@ -25,7 +26,15 @@ export class PipelineStack extends cdk.Stack {
           repo: 'learning-aws-pipeline',
           branch: 'master',
           oauthToken: SecretValue.secretsManager('github-token'),
-          output: sourceOutput,
+          output: cdkSource,
+        }),
+        new GitHubSourceAction({
+          actionName: 'Service_Source',
+          owner: 'laazyj',
+          repo: 'express-lambda',
+          branch: 'master',
+          oauthToken: SecretValue.secretsManager('github-token'),
+          output: serviceSource,
         })
       ],
     });
@@ -43,7 +52,7 @@ export class PipelineStack extends cdk.Stack {
             },
             buildSpec: BuildSpec.fromSourceFilename('build-specs/cdk-build-spec.yml'),
           }),
-          input: sourceOutput,
+          input: cdkSource,
           outputs: [cdkBuildOutput],
         })
       ]
